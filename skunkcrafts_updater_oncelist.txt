@@ -1,1 +1,6 @@
-../FlyWithLua/Scripts/Simple_Ground_Equipment_and_Services_CONFIG_options.lua|-1
+Scripts/Simple_Ground_Equipment_and_Services_CONFIG_options.lua|-1
+Scripts/Simple_Ground_Equipment_and_Services/global_runway_coordinates.cache|-1
+Scripts/Simple_Ground_Equipment_and_Services/global_stand_coordinates.cache|-1
+Scripts/Simple_Ground_Equipment_and_Services/aircraft_optional_profiles/SGES_USER_CONFIG.lua|-1
+Scripts/Simple_Ground_Equipment_and_Services/custom_scenery_stand_coordinates.cache|-1
+Scripts/Simple_Ground_Equipment_and_Services/custom_scenery_stand_coordinates.temp|-1
