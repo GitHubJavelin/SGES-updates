@@ -7,7 +7,6 @@ Scripts/Simple_Ground_Equipment_and_Services/VDGS/VDGSMobile.obj|880296960
 Scripts/Simple_Ground_Equipment_and_Services/VDGS/VDGSFixed.obj|743978997
 Scripts/Simple_Ground_Equipment_and_Services/VDGS/VDGS_LIT.png|1826224600
 Scripts/Simple_Ground_Equipment_and_Services/VDGS/VDGS_NML.png|3731468040
-Scripts/Simple_Ground_Equipment_and_Services/Simple_Ground_Equipment_and_Services_CONFIG_options.lua.off|2107687081
 Scripts/Simple_Ground_Equipment_and_Services/HMS_Dragon/Variant 1 - Basic obj/Type 45 hard deck.obj|695997272
 Scripts/Simple_Ground_Equipment_and_Services/HMS_Dragon/Variant 1 - Basic obj/T45_Paint_NORM.png|689819088
 Scripts/Simple_Ground_Equipment_and_Services/HMS_Dragon/Variant 1 - Basic obj/T45_Paint.png|692992326
