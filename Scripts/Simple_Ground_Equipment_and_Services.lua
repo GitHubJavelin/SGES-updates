@@ -22,10 +22,11 @@
 --    DEALINGS IN THE SOFTWARE.
 
 
+
 --------------------------------------------------------------------------------
 -- Simple Ground Equipment & Services
 -- aka The Poor Man Ground Services --------------------------------------------
-version_text_SGES = "77.2"
+version_text_SGES = "78"
 --------------------------------------------------------------------------------
 --[[
 
@@ -41,6 +42,11 @@ version_text_SGES = "77.2"
 
 
 ]]
+
+-- Required dependencies from the very beginning
+dofile(SCRIPT_DIRECTORY .. "Simple_Ground_Equipment_and_Services/Simple_Ground_Equipment_and_Services_CONFIG_aircraft.lua")
+dofile(SCRIPT_DIRECTORY .. "Simple_Ground_Equipment_and_Services/Simple_Ground_Equipment_and_Services_CONFIG_options.lua")
+dofile(SCRIPT_DIRECTORY .. "Simple_Ground_Equipment_and_Services/Simple_Ground_Equipment_and_Services_CONFIG_vehicles.lua")
 SGES_start_delay = 0
 SGES_start_time = os.clock() + SGES_start_delay
 SGES_loaded = false
@@ -689,8 +695,8 @@ function SGES_script()
 	-- |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 	-- then load the user preferences :
 
-	dofile (SCRIPT_DIRECTORY .. "Simple_Ground_Equipment_and_Services_CONFIG_aircraft.lua") -- user settings and preferences
-	dofile (SCRIPT_DIRECTORY .. "Simple_Ground_Equipment_and_Services_CONFIG_vehicles.lua") -- user settings and preferences
+	dofile (SCRIPT_DIRECTORY .. "Simple_Ground_Equipment_and_Services/Simple_Ground_Equipment_and_Services_CONFIG_aircraft.lua") -- user settings and preferences
+	dofile (SCRIPT_DIRECTORY .. "Simple_Ground_Equipment_and_Services/Simple_Ground_Equipment_and_Services_CONFIG_vehicles.lua") -- user settings and preferences
 	dofile (SCRIPT_DIRECTORY .. "Simple_Ground_Equipment_and_Services/Simple_Ground_Equipment_and_Services_Menu_position.lua") -- user settings and preferences
 	dofile (SCRIPT_DIRECTORY .. "Simple_Ground_Equipment_and_Services/Simple_Ground_Equipment_and_Services_Developer_export.lua") -- user settings and preferences
 
@@ -2010,9 +2016,9 @@ function SGES_script()
 
 		if sges_EngineState[0] < 5 and sges_StarterState[0] == 0 and SGES_is_glider == 0 and sges_gs_plane_y_agl[0] < 2 then
 			read_the_SGES_startup_options = true
-			dofile (SCRIPT_DIRECTORY .. "Simple_Ground_Equipment_and_Services_CONFIG_options.lua") -- user settings and preferences
+			dofile (SCRIPT_DIRECTORY .. "Simple_Ground_Equipment_and_Services/Simple_Ground_Equipment_and_Services_CONFIG_options.lua") -- user settings and preferences
 			if SGES_start_delay == 0 then
-				print("[Ground Equipment " .. version_text_SGES .. "] Applying startup options from FlyWithLua/Scripts/Simple_Ground_Equipment_and_Services_CONFIG_options.lua without delay.")
+				print("[Ground Equipment " .. version_text_SGES .. "] Applying startup options from FlyWithLua/Scripts/Simple_Ground_Equipment_and_Services/Simple_Ground_Equipment_and_Services_CONFIG_options.lua without delay.")
 			else
 				print("[Ground Equipment " .. version_text_SGES .. "] Applying startup options from Simple_Ground_Equipment_and_Services_CONFIG_options.lua with a " .. SGES_start_delay .." a.u. delay.")
 			end
@@ -10679,7 +10685,7 @@ function SGES_script()
 
 
 
-			if includeCustomParkingPositions == nil then dofile (SCRIPT_DIRECTORY .. "Simple_Ground_Equipment_and_Services_CONFIG_options.lua") end -- read user settings and preferences
+			if includeCustomParkingPositions == nil then dofile (SCRIPT_DIRECTORY .. "Simple_Ground_Equipment_and_Services/Simple_Ground_Equipment_and_Services_CONFIG_options.lua") end -- read user settings and preferences
 
 			if includeCustomParkingPositions then
 				print("[Ground Equipment " .. version_text_SGES .. "]  CREATING SGES CACHE FOR MARSHALLER (Custom Sc.)")
@@ -15635,7 +15641,7 @@ function SGES_script()
 			if user_boat_lat ~= nil then user_boat_lat_GUI = user_boat_lat end
 			-- emergency read of the config file if we cant find the info -- safety
 			if user_boat_lon_GUI == nil or user_boat_lat_GUI == nil then
-				dofile (SCRIPT_DIRECTORY .. "Simple_Ground_Equipment_and_Services_CONFIG_options.lua") -- user settings and preferences
+				dofile (SCRIPT_DIRECTORY .. "Simple_Ground_Equipment_and_Services/Simple_Ground_Equipment_and_Services_CONFIG_options.lua") -- user settings and preferences
 				-- this embark other stuff but also saves the day regarding undefined values
 				if user_boat_lon ~= nil then user_boat_lon_GUI = user_boat_lon else user_boat_lon_GUI = -1 end
 				if user_boat_lat ~= nil then user_boat_lat_GUI = user_boat_lat else user_boat_lat_GUI = -1  end
