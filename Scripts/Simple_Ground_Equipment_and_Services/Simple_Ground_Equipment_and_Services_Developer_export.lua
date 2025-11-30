@@ -19,7 +19,7 @@ function SGES_13march2024_WriteToDisk(option)
 		file:write('-- This export allows you to add or amend manually an aircraft configuration in SGES_CONFIG_Aircraft.lua \n\n')
 	elseif option == 1 then
 		file:write("--Exported ".. string.format("%02d",os.date("%H")) .. "h" ..  string.format("%02d",os.date("%M")))
-		file:write('-- This profile is optional, lots of aircraft are already defined in the general file FlyWithLua/Scripts/Simple_Ground_Equipment_and_Services_CONFIG_aircraft.lua.\n--This profile allows customisation only. You can remove it safely.\n\n')
+		file:write('-- This profile is optional, lots of aircraft are already defined in the general file FlyWithLua/Scripts/Simple_Ground_Equipment_and_Services/Simple_Ground_Equipment_and_Services_CONFIG_aircraft.lua.\n--This profile allows customisation only. You can remove it safely.\n\n')
 	end
 	file:write("\n--Aircraft-----------------------------------\n\n")
 	if option == 0 then

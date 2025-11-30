@@ -555,7 +555,7 @@ function  Read_the_aircraft_profile_if_any()
 		else
 			-- reject and reload main configuration
 			print("- I REJECT the " .. SGES_CONFIG_PLANE_ICAO .. " profile, not exactly the current airplane ! Reloading general config.")
-			dofile (SCRIPT_DIRECTORY .. "Simple_Ground_Equipment_and_Services_CONFIG_aircraft.lua") -- overwritte settings when rejected by the general user settings and preferences
+			dofile (SCRIPT_DIRECTORY .. "Simple_Ground_Equipment_and_Services/Simple_Ground_Equipment_and_Services_CONFIG_aircraft.lua") -- overwritte settings when rejected by the general user settings and preferences
 			AircraftParameters()
 		end
 	end
