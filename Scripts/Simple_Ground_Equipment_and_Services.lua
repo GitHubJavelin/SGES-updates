@@ -26,7 +26,7 @@
 --------------------------------------------------------------------------------
 -- Simple Ground Equipment & Services
 -- aka The Poor Man Ground Services --------------------------------------------
-version_text_SGES = "78"
+version_text_SGES = "78.1"
 --------------------------------------------------------------------------------
 --[[
 
@@ -1364,7 +1364,7 @@ function SGES_script()
 			print("[Ground Equipment " .. version_text_SGES .. "] is deactivating ground military objects in bush mode")
 		end
 	end
-	BushObjectsToggle(military) -- once
+	BushObjectsToggle(sges_military) -- once
 
 	--Prefilled_PushBack1Object = 	SCRIPT_DIRECTORY   .. "Simple_Ground_Equipment_and_Services/all_named_lights.obj"
 	----------------------------------------------------------------------------
@@ -1536,11 +1536,23 @@ function SGES_script()
 	-- |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
 	SGES_stairs_type = "New_Normal"
-
 	prevent_respawn = false
+	GUImilitary_sges = false
+	GUImilitary_default_sges = false
+	GUImoreShip = false
+	sges_military = 0
+	sges_military_default = 0
+	pushback_manual = false
+	local custom_scenery_only = true
+	local NotFirstLoad = 0
+	IsPassengerPlane = 1
+	GUIIsPassengerPlane = true
 
+	prepare_special_vehicles_for_aircraft() -- once datarefs avec initializations have been loaded
+	-- the function is located in ...Aircrat_specifics.lua
 
-	prepare_special_vehicles_for_aircraft() -- once datarefs have been loaded
+	-- The rest is delocated, we will only manage the stairs here in this main script :
+	---------------------------------------------------------------------------------------------------------------------------------
 
 	if PLANE_ICAO == "CONC"
 		or PLANE_ICAO == "MD11"
@@ -1636,96 +1648,6 @@ function SGES_script()
 	Prefilled_StairsXPJ2Object = Prefilled_StairsXPJObject
 	Prefilled_StairsXPJ2Object_base = Prefilled_StairsXPJObject_base
 	---------------------------------------------------------------------------------------------------------------------------------
-	pushback_manual = false
-
-	local custom_scenery_only = true
-
-	local NotFirstLoad = 0
-	IsPassengerPlane = 1
-	local GUIIsPassengerPlane = true
-
-
-
-	if string.match(AircraftPath ,"321") and (string.find(AircraftPath ,"reight") or string.find(AircraftPath ,"argo") or string.find(AircraftPath ,"P2F") or string.find(AircraftPath ,"PCF") or string.find(AircraftPath ,"Titan") or string.find(AircraftPath ,"NAC") or string.find(AircraftPath ,"Fedex") or string.find(AircraftPath ,"UPS")) then
-		IsPassengerPlane = 0
-		GUIIsPassengerPlane = false
-	end
-	if string.find(AircraftPath ,"reight") or string.find(AircraftPath ,"argo") then
-		IsPassengerPlane = 0
-		GUIIsPassengerPlane = false
-	end
-
-	if string.find(AIRCRAFT_FILENAME,"Cargo") or string.find(AIRCRAFT_FILENAME,"Freight") then
-		IsPassengerPlane = 0
-		GUIIsPassengerPlane = false
-	end
-
-
-	if string.find(AircraftPath ,"Chinese Spy Balloon") then
-		IsPassengerPlane = 0
-		GUIIsPassengerPlane = false
-	end
-
-	if PLANE_ICAO == "A3ST" or PLANE_ICAO == "MD11" or PLANE_ICAO == "AN12" or PLANE_ICAO == "C130" or PLANE_ICAO == "L100" or (string.match(AIRCRAFT_PATH, "C-17") and not PLANE_ICAO == "C172" and not PLANE_ICAO == "C170") or (PLANE_ICAO == "C17" or PLANE_ICAO == "3383") then
-		IsPassengerPlane = 0
-		GUIIsPassengerPlane = false
-	end
-
-	-- detect a freighter by avoid an F16 or F22 or F35 fighter to be flagged as freighter
-	--~ if AIRCRAFT_FILENAME:match("F") and not AIRCRAFT_FILENAME:match("JF") and not string.find(PLANE_ICAO,"F1") and not PLANE_ICAO:match("F1") and not PLANE_ICAO:match("F2") and not PLANE_ICAO:match("F3") then
-		--~ IsPassengerPlane = 0
-		--~ GUIIsPassengerPlane = false
-	--~ end
-	-- commented out because of false positives
-
-	if PLANE_ICAO == "CONC" then
-		IsPassengerPlane = 1
-		GUIIsPassengerPlane = true
-	end
-
-	if string.match(AircraftPath ,"146") and string.match(AircraftPath ,"3Q") then
-		IsPassengerPlane = 0
-		GUIIsPassengerPlane = false
-	elseif string.match(AircraftPath ,"146") and string.match(AircraftPath ,"2Q") then
-		IsPassengerPlane = 0
-		GUIIsPassengerPlane = false
-	elseif string.match(AircraftPath ,"146") then
-		IsPassengerPlane = 1
-		GUIIsPassengerPlane = true
-	end
-
-
-	if PLANE_ICAO == "E170" or PLANE_ICAO == "E175" then
-		IsPassengerPlane = 1
-		GUIIsPassengerPlane = true
-	end
-	if PLANE_ICAO == "E190" or PLANE_ICAO == "E195" or PLANE_ICAO == "E19L" then
-		IsPassengerPlane = 1
-		GUIIsPassengerPlane = true
-	end
-
-	GUImilitary_sges = false
-	GUImilitary_default_sges = false
-	GUImoreShip = false
-	local military = 0
-	local military_default = 0
-
-	-- define the military status for some identified mil planes
-	if PLANE_ICAO == "VULC" or PLANE_ICAO == "AV8B" or PLANE_ICAO == "F4" or PLANE_ICAO == "F5" or PLANE_ICAO == "F14" or PLANE_ICAO == "F15" or PLANE_ICAO == "F16" or PLANE_ICAO == "F18" or PLANE_ICAO == "F22" or PLANE_ICAO == "F35" or PLANE_ICAO == "F104" or PLANE_ICAO == "F119" or PLANE_ICAO == "F19" or PLANE_ICAO == "HAWK" or PLANE_ICAO == "M346"
-	or PLANE_ICAO == "S92"
-	or PLANE_ICAO == "ch47"
-	or (string.find(SGES_Author,"Tom Kyler") and AIRCRAFT_FILENAME == "F-4.acf")
-	or string.match(AIRCRAFT_PATH, "Tornado")
-	or string.match(AIRCRAFT_PATH, "Buckeye")
-	or (string.find(SGES_Author,"Alex Unruh") and AIRCRAFT_FILENAME == "F-14D.acf")
-	or (string.find(SGES_Author,"Brault") and AIRCRAFT_FILENAME == "F104A.acf")
-	or string.match(AIRCRAFT_PATH, "Military")
-	then
-		military_default = 1
-		GUImilitary_default_sges = true
-		print("[Ground Equipment " .. version_text_SGES .. "] Switching to MILITARY assets.")
-	end
-
 
 
 	sges_big_airport = false
@@ -2639,11 +2561,11 @@ function SGES_script()
 			if (math.abs(BeltLoaderFwdPosition) <= 4 or BeltLoaderFwdPosition == -5) and not IsXPlane12 then
 				--draw_static_object(-x-0.5,z-0.8,-10,Cones_instance[4],"Cones") -- Right Wingtip cone 3 (added 15-07-2023)
 				-- draw only one cone for small airplanes by superposition in XP11
-			elseif (math.abs(BeltLoaderFwdPosition) <= 4 or BeltLoaderFwdPosition == -5) and IsXPlane12 and military ~= 1 and military_default ~= 1 then
+			elseif (math.abs(BeltLoaderFwdPosition) <= 4 or BeltLoaderFwdPosition == -5) and IsXPlane12 and sges_military ~= 1 and sges_military_default ~= 1 then
 				--~ -- change for fire extinguisher in XP12 for small airplanes
 				draw_static_object(-x-0.35,z+0.5,85,Cones_instance[4],"Extinguisher")
 				--~ print("exting")
-			elseif (math.abs(BeltLoaderFwdPosition) <= 4 or BeltLoaderFwdPosition == -5) and IsXPlane12 and (military == 1 or military_default == 1) then
+			elseif (math.abs(BeltLoaderFwdPosition) <= 4 or BeltLoaderFwdPosition == -5) and IsXPlane12 and (sges_military == 1 or sges_military_default == 1) then
 				--draw_static_object(-x-0.5,z-0.8,-10,Cones_instance[4],"Cones")
 				-- Here draw only one cone for small airplanes by superposition in XP12
 			else
@@ -2889,7 +2811,7 @@ function SGES_script()
 				if distance_to_fuselage ~= 0 then x = x + distance_to_fuselage end
 
 
-			   if PLANE_ICAO == "B742" and SGES_Author == "Felis Leopard" and military_default == 1 then
+			   if PLANE_ICAO == "B742" and SGES_Author == "Felis Leopard" and sges_military_default == 1 then
 					-- This 747 is for the White House (E4B modification)
 					x = x + 1.4
 			   end
@@ -5117,7 +5039,7 @@ function SGES_script()
 
 		if Cones_instance[4] == nil then --15-7-23
 
-			if (math.abs(BeltLoaderFwdPosition) <= 4 or BeltLoaderFwdPosition == -5) and IsXPlane12 and military ~= 1 and military_default ~= 1 and not SGES_BushMode then
+			if (math.abs(BeltLoaderFwdPosition) <= 4 or BeltLoaderFwdPosition == -5) and IsXPlane12 and sges_military ~= 1 and sges_military_default ~= 1 and not SGES_BushMode then
 			   XPLM.XPLMLoadObjectAsync(XPlane12_Common_Equipment_directory   .. "fire_extinguisher_1.obj",
 						function(inObject, inRefcon)
 						Cones_instance[4] = XPLM.XPLMCreateInstance(inObject, datarefs_addr)
@@ -5143,7 +5065,7 @@ function SGES_script()
 			GPUObject = Prefilled_GPUObject
 			if IsXPlane12 and math.abs(BeltLoaderFwdPosition) <= 4 or PLANE_ICAO == "DH8D" then GPUObject = Prefilled_GA_GPUObject end
 
-			if UseXplaneDefaultObject == false and (military == 1 or military_default == 1) and User_Custom_Prefilled_MilGPUObject ~= nil then
+			if UseXplaneDefaultObject == false and (sges_military == 1 or sges_military_default == 1) and User_Custom_Prefilled_MilGPUObject ~= nil then
 				GPUObject = User_Custom_Prefilled_MilGPUObject
 			end
 
@@ -5207,9 +5129,9 @@ function SGES_script()
 						print("[Ground Equipment " .. version_text_SGES .. "] Fuel truck for the USA and airliners.")
 					end
 				end
-				if military == 1 and XTrident_Chinook_Directory ~= nil then Prefilled_FuelObject = SCRIPT_DIRECTORY .. XTrident_Chinook_Directory   .. "/plugins/CH47/mission/misc/M978.obj" end
-				if military_default == 1 and User_Custom_Prefilled_FuelObject_Mil ~= nil then Prefilled_FuelObject = User_Custom_Prefilled_FuelObject_Mil end
-				if SGES_BushMode and IsXPlane12 and (military == 1 or military_default == 1) then
+				if sges_military == 1 and XTrident_Chinook_Directory ~= nil then Prefilled_FuelObject = SCRIPT_DIRECTORY .. XTrident_Chinook_Directory   .. "/plugins/CH47/mission/misc/M978.obj" end
+				if sges_military_default == 1 and User_Custom_Prefilled_FuelObject_Mil ~= nil then Prefilled_FuelObject = User_Custom_Prefilled_FuelObject_Mil end
+				if SGES_BushMode and IsXPlane12 and (sges_military == 1 or sges_military_default == 1) then
 
 					if randomView > 0.20 then Prefilled_FuelObject = Prefilled_FuelObject_option1 else
 						Prefilled_FuelObject_option2=XPlane12_ford_carrier_accessories_directory .. "SH60_Seahawk_animated.obj"
@@ -5237,9 +5159,9 @@ function SGES_script()
 			   --print("[Ground Equipment " .. version_text_SGES .. "] 4 load_rampservice Prefilled_CleaningTruckObject")
 
 
-			if (military_default == 1 or string.find(PLANE_ICAO,"F")) and sges_airport_ID ~= nil and string.find(sges_airport_ID,"LG") then
+			if (sges_military_default == 1 or string.find(PLANE_ICAO,"F")) and sges_airport_ID ~= nil and string.find(sges_airport_ID,"LG") then
 				Prefilled_CleaningTruckObject = SCRIPT_DIRECTORY ..  "Simple_Ground_Equipment_and_Services/MisterX_Lib/"   .. "Cleaning/Van_Mil_b.obj"
-			elseif military_default == 1 then
+			elseif sges_military_default == 1 then
 				Prefilled_CleaningTruckObject = Prefilled_Mil_Van
 				if SecondStairsFwdPosition <= 4 and SGES_BushMode and IsXPlane12 then
 					Prefilled_CleaningTruckObject = Prefilled_Peugeot308_black_Object
@@ -5256,11 +5178,11 @@ function SGES_script()
 								rampserviceref4L = inObject
 							end,
 							inRefcon )
-							--~ print("[Ground Equipment " .. version_text_SGES .. "] Bush mode + Military mode + X-Plane 12.1.4+ : changing the Peugeot car for an X-Plane 12.1.4+ SUV.")
+							--~ print("[Ground Equipment " .. version_text_SGES .. "] Bush mode + sges_military mode + X-Plane 12.1.4+ : changing the Peugeot car for an X-Plane 12.1.4+ SUV.")
 					end
 					------------------ VEHICLE REPLACEMENT AFTER X-PLANE 12.1.4 ----------------
 				end
-			elseif military == 1 and XTrident_Chinook_Directory ~= nil then Prefilled_CleaningTruckObject = SCRIPT_DIRECTORY .. XTrident_Chinook_Directory   .. "/plugins/CH47/mission/loads/humvee.obj"
+			elseif sges_military == 1 and XTrident_Chinook_Directory ~= nil then Prefilled_CleaningTruckObject = SCRIPT_DIRECTORY .. XTrident_Chinook_Directory   .. "/plugins/CH47/mission/loads/humvee.obj"
 			elseif SGES_BushMode and IsXPlane12 then
 				Prefilled_CleaningTruckObject = XPlane12_BushObjects_directory   .. "DkGrpMed1.obj"
 			else
@@ -5338,7 +5260,7 @@ function SGES_script()
 		-- otherwise, xplane will crash --> hey that looks pretty normal since 0 is the first case. GF
 
 			-- B742 option to board via the Cargo door (White House)  (E4B modification)
-		   if PLANE_ICAO == "B742" and SGES_Author == "Felis Leopard" and military_default == 1 then
+		   if PLANE_ICAO == "B742" and SGES_Author == "Felis Leopard" and sges_military_default == 1 then
 				print("[Ground Equipment " .. version_text_SGES .. "] This B747 is for the White House : stairs to the right cargo hole.")
 				Stored_Prefilled_BeltLoaderObject = Prefilled_BeltLoaderObject
 				Prefilled_BeltLoaderObject = Prefilled_StairsXPJObject
@@ -5522,11 +5444,11 @@ function SGES_script()
 
 			if IsPassengerPlane == 1 then
 				--nothing
-			if (military_default == 1 or string.find(PLANE_ICAO,"F")) and sges_airport_ID ~= nil and string.find(sges_airport_ID,"LG") then
+			if (sges_military_default == 1 or string.find(PLANE_ICAO,"F")) and sges_airport_ID ~= nil and string.find(sges_airport_ID,"LG") then
 				Prefilled_BusObject = SCRIPT_DIRECTORY ..  "Simple_Ground_Equipment_and_Services/MisterX_Lib/"   .. "Cobus/Van_Mil_b_pax.obj"
-			elseif military_default == 1 and not SGES_BushMode and User_Custom_Prefilled_BusObject_military_large ~= nil and User_Custom_Prefilled_BusObject_military_small ~= nil then
+			elseif sges_military_default == 1 and not SGES_BushMode and User_Custom_Prefilled_BusObject_military_large ~= nil and User_Custom_Prefilled_BusObject_military_small ~= nil then
 				if BeltLoaderFwdPosition > 3 then Prefilled_BusObject = User_Custom_Prefilled_BusObject_military_large else Prefilled_BusObject = User_Custom_Prefilled_BusObject_military_small end
-			elseif military == 1 and XTrident_Chinook_Directory ~= nil then Prefilled_BusObject = SCRIPT_DIRECTORY .. XTrident_Chinook_Directory   .. "/plugins/CH47/mission/loads/humvee.obj" end
+			elseif sges_military == 1 and XTrident_Chinook_Directory ~= nil then Prefilled_BusObject = SCRIPT_DIRECTORY .. XTrident_Chinook_Directory   .. "/plugins/CH47/mission/loads/humvee.obj" end
 			elseif UseXplaneDefaultObject == false then
 				Prefilled_BusObject = Prefilled_ULDTrainObject
 			else
@@ -5640,9 +5562,9 @@ function SGES_script()
 		if FM_instance[0] == nil and FMonce == 0  and FM_show_only_once then
 
 			if XTrident_Chinook_Directory ~= nil then
-				if military == 1 then Prefilled_FMObject = SCRIPT_DIRECTORY .. XTrident_Chinook_Directory   .. "/plugins/CH47/mission/loads/humvee.obj" end
+				if sges_military == 1 then Prefilled_FMObject = SCRIPT_DIRECTORY .. XTrident_Chinook_Directory   .. "/plugins/CH47/mission/loads/humvee.obj" end
 
-				 if military == 0 and XTrident_Chinook_Directory ~= nil and Prefilled_FMObject == SCRIPT_DIRECTORY .. XTrident_Chinook_Directory   .. "/plugins/CH47/mission/loads/humvee.obj" then
+				 if sges_military == 0 and XTrident_Chinook_Directory ~= nil and Prefilled_FMObject == SCRIPT_DIRECTORY .. XTrident_Chinook_Directory   .. "/plugins/CH47/mission/loads/humvee.obj" then
 						-- FOLLOW ME VEHICLE --RESET----------------------------------------------------
 						if BeltLoaderFwdPosition < 4 and (not string.match(PLANE_ICAO,"B46") and not string.match(PLANE_ICAO,"RJ") ) then
 							-- for the smaller aircraft, use the smallest follow-me we provide
@@ -5680,11 +5602,11 @@ function SGES_script()
 					end
 					CateringHighPartObject =  Prefilled_LightObject				-- no second part
 
-				elseif (military_default == 1 or string.find(PLANE_ICAO,"F")) and sges_airport_ID ~= nil and string.find(sges_airport_ID,"LG") then
+				elseif (sges_military_default == 1 or string.find(PLANE_ICAO,"F")) and sges_airport_ID ~= nil and string.find(sges_airport_ID,"LG") then
 					CatObject = SCRIPT_DIRECTORY   .. "Simple_Ground_Equipment_and_Services/Ground_carts/Van_Camo_b.obj"
 					CateringHighPartObject = Prefilled_LightObject
 
-				elseif ( military_default == 1 or military == 1 ) and Prefilled_Mil_Van ~= nil then
+				elseif ( sges_military_default == 1 or sges_military == 1 ) and Prefilled_Mil_Van ~= nil then
 					CatObject = Prefilled_Mil_Van
 					CateringHighPartObject = Prefilled_LightObject				-- no second part
 				elseif IsPassengerPlane == 0 and not SGES_BushMode then
@@ -6092,7 +6014,7 @@ function SGES_script()
 	end
 	function load_People3()
 		if People3_instance[0] == nil and People3_show_only_once then
-			if military == 1 or military_default == 1 then PeopleObject3 = Prefilled_PassengerMilObject
+			if sges_military == 1 or sges_military_default == 1 then PeopleObject3 = Prefilled_PassengerMilObject
 			elseif LATITUDE > 38.79 and LATITUDE < 38.90 and ((LONGITUDE > -77.037 and LONGITUDE < -77.035) or (LONGITUDE > -76.88 and LONGITUDE < -76.86) ) then
 			 PeopleObject3 = User_Custom_Prefilled_Passenger4Object -- USSS at the White House
 			else PeopleObject3 = Prefilled_PeopleObject3
@@ -6233,7 +6155,7 @@ function SGES_script()
 
 				if outsideAirTemp < 10 then
 						Passenger1Object = Prefilled_Passenger13Object
-				elseif military == 1 or military_default == 1 then
+				elseif sges_military == 1 or sges_military_default == 1 then
 						Passenger1Object = Prefilled_PassengerMilObject
 				else Passenger1Object = Prefilled_Passenger1Object end
 
@@ -6249,7 +6171,7 @@ function SGES_script()
 			if IsPassengerPlane == 1 then
 
 				if Passenger_instance[1] == nil and passenger2_show_only_once and terminate_passenger_action == false then
-					if military == 1 or military_default == 1 then Passenger2Object = Prefilled_PassengerMilObject  else Passenger2Object = Prefilled_Passenger2Object  end
+					if sges_military == 1 or sges_military_default == 1 then Passenger2Object = Prefilled_PassengerMilObject  else Passenger2Object = Prefilled_Passenger2Object  end
 					XPLM.XPLMLoadObjectAsync(Passenger2Object,
 						function(inObject, inRefcon)
 							Passenger_instance[1] = XPLM.XPLMCreateInstance(inObject, datarefs_addr)
@@ -6260,7 +6182,7 @@ function SGES_script()
 				end
 				if Passenger_instance[2] == nil and passenger3_show_only_once and terminate_passenger_action == false then
 
-					if military == 1 or military_default == 1 then Passenger3Object = Prefilled_PassengerMilObject else Passenger3Object = Prefilled_Passenger3Object  end
+					if sges_military == 1 or sges_military_default == 1 then Passenger3Object = Prefilled_PassengerMilObject else Passenger3Object = Prefilled_Passenger3Object  end
 
 					XPLM.XPLMLoadObjectAsync(Passenger3Object,
 						function(inObject, inRefcon)
@@ -6282,7 +6204,7 @@ function SGES_script()
 				end
 
 				if Passenger_instance[4] == nil and passenger5_show_only_once and terminate_passenger_action == false then
-					if military == 1 or military_default == 1 then Passenger6Object = Prefilled_PassengerMilObject else Passenger6Object = Prefilled_Passenger8Object  end
+					if sges_military == 1 or sges_military_default == 1 then Passenger6Object = Prefilled_PassengerMilObject else Passenger6Object = Prefilled_Passenger8Object  end
 					XPLM.XPLMLoadObjectAsync(Prefilled_Passenger6Object,
 						function(inObject, inRefcon)
 							Passenger_instance[4] = XPLM.XPLMCreateInstance(inObject, datarefs_addr)
@@ -6308,7 +6230,7 @@ function SGES_script()
 
 
 				if Passenger_instance[6] == nil and passenger7_show_only_once and terminate_passenger_action == false then --
-					if military == 1 or military_default == 1 then Passenger8Object = Prefilled_PassengerMilObject else Passenger3Object = Prefilled_Passenger8Object  end
+					if sges_military == 1 or sges_military_default == 1 then Passenger8Object = Prefilled_PassengerMilObject else Passenger3Object = Prefilled_Passenger8Object  end
 					XPLM.XPLMLoadObjectAsync(Prefilled_Passenger8Object,
 						function(inObject, inRefcon)
 							Passenger_instance[6] = XPLM.XPLMCreateInstance(inObject, datarefs_addr)
@@ -6318,7 +6240,7 @@ function SGES_script()
 					passenger7_show_only_once = false
 				end
 				if Passenger_instance[7] == nil and passenger8_show_only_once and terminate_passenger_action == false then
-					if military == 1 or military_default == 1 then Passenger9Object = Prefilled_PassengerMilObject else Passenger9Object = Prefilled_Passenger9Object end
+					if sges_military == 1 or sges_military_default == 1 then Passenger9Object = Prefilled_PassengerMilObject else Passenger9Object = Prefilled_Passenger9Object end
 					XPLM.XPLMLoadObjectAsync(Passenger9Object,
 						function(inObject, inRefcon)
 							Passenger_instance[7] = XPLM.XPLMCreateInstance(inObject, datarefs_addr)
@@ -6329,7 +6251,7 @@ function SGES_script()
 				end
 				if Passenger_instance[8] == nil and passenger9_show_only_once and terminate_passenger_action == false then --
 
-					if military == 1 or military_default == 1 then Passenger10Object = Prefilled_PassengerMilObject else Passenger10Object = Prefilled_Passenger10Object end
+					if sges_military == 1 or sges_military_default == 1 then Passenger10Object = Prefilled_PassengerMilObject else Passenger10Object = Prefilled_Passenger10Object end
 					XPLM.XPLMLoadObjectAsync(Passenger10Object,
 						function(inObject, inRefcon)
 							Passenger_instance[8] = XPLM.XPLMCreateInstance(inObject, datarefs_addr)
@@ -6348,7 +6270,7 @@ function SGES_script()
 					passenger10_show_only_once = false
 				end
 				if Passenger_instance[10] == nil and passenger11_show_only_once and terminate_passenger_action == false then --
-					if military == 1 or military_default == 1 then Passenger12Object = Prefilled_PassengerMilObject else Passenger12Object = Prefilled_Passenger8Object  end
+					if sges_military == 1 or sges_military_default == 1 then Passenger12Object = Prefilled_PassengerMilObject else Passenger12Object = Prefilled_Passenger8Object  end
 					XPLM.XPLMLoadObjectAsync(Prefilled_Passenger12Object,
 						function(inObject, inRefcon)
 							Passenger_instance[10] = XPLM.XPLMCreateInstance(inObject, datarefs_addr)
@@ -6716,7 +6638,7 @@ function SGES_script()
 
 			if IsPassengerPlane == 0 then
 				Baggage2Object=XPlane_Ramp_Equipment_directory   .. "cont_dolly_LD3_1.obj"
-			elseif military == 1 or military_default == 1 then
+			elseif sges_military == 1 or sges_military_default == 1 then
 				Baggage2Object=XPlane_Ramp_Equipment_directory   .. "pallet_04.obj"
 			else
 				randomView = math.random()
@@ -6740,7 +6662,7 @@ function SGES_script()
 			if Baggage_instance[3] == nil and baggage3_show_only_once and not UseXplaneDefaultObject then
 				if IsPassengerPlane == 0 then
 					Baggage3Object = Prefilled_GenericDriverObject_anim
-				elseif military == 1 or military_default == 1 then
+				elseif sges_military == 1 or sges_military_default == 1 then
 					Baggage3Object = Prefilled_PassengerMilObject
 				else
 					randomView = math.random()
@@ -6779,7 +6701,7 @@ function SGES_script()
 	function load_ULD()
 		if Baggage_instance[5] == nil and baggage5_show_only_once and not UseXplaneDefaultObject then
 
-			if IsXPlane12 and (military_default == 1 or military == 1) then
+			if IsXPlane12 and (sges_military_default == 1 or sges_military == 1) then
 				Prefilled_ULDObject = XPlane12_ford_carrier_accessories_directory   .. "Cartridge_Pallet.obj"
 			--~ elseif BeltLoaderFwdPosition >= ULDthresholdx then
 				--~ Prefilled_ULDObject 	= SCRIPT_DIRECTORY ..  "Simple_Ground_Equipment_and_Services/MisterX_Lib/ULDLoader/ULD.obj"
@@ -6868,7 +6790,7 @@ function SGES_script()
 			if show_FireVehicle then
 				Prefilled_StairsXPJObject_base 	= SCRIPT_DIRECTORY  ..  "Simple_Ground_Equipment_and_Services/Airstairs/new/normal/MobileAirstairsBase_EMS.obj"
 				Prefilled_StairsXPJObject 	= SCRIPT_DIRECTORY   	.. 	"Simple_Ground_Equipment_and_Services/Airstairs/new/normal/MobileAirstairsSlider_EMS.obj"
-			elseif military == 1 or military_default == 1 then
+			elseif sges_military == 1 or sges_military_default == 1 then
 				Prefilled_StairsXPJObject_base 	= SCRIPT_DIRECTORY  ..  "Simple_Ground_Equipment_and_Services/Airstairs/new/normal/MobileAirstairsBase_Mil.obj"
 				Prefilled_StairsXPJObject 	= SCRIPT_DIRECTORY   	.. 	"Simple_Ground_Equipment_and_Services/Airstairs/new/normal/MobileAirstairsSlider_Mil.obj"
 			else
@@ -7044,7 +6966,7 @@ function SGES_script()
 	function load_Forklift()
 		if Forklift_instance[0] == nil and Forklift_show_only_once then
 
-		if military == 1 or military_default == 1 then ForkliftObject = Prefilled_MilForkliftObject else ForkliftObject = Prefilled_ForkliftObject end
+		if sges_military == 1 or sges_military_default == 1 then ForkliftObject = Prefilled_MilForkliftObject else ForkliftObject = Prefilled_ForkliftObject end
 		   XPLM.XPLMLoadObjectAsync(ForkliftObject,
 					function(inObject, inRefcon)
 						Forklift_instance[0] = XPLM.XPLMCreateInstance(inObject, datarefs_addr)
@@ -7389,7 +7311,7 @@ function SGES_script()
 				objpos_value[0].y = objpos_target_value_y
 				wetness = 0 -- always depict the pushback target
 			end
-			if object_name == "Cleaning" and military == 1 then
+			if object_name == "Cleaning" and sges_military == 1 then
 				--~ object_hdg_corr = object_hdg_corr - 90
 				objpos_target_value_y = ground + milheight
 				objpos_value[0].y = objpos_target_value_y
@@ -7430,7 +7352,7 @@ function SGES_script()
 				--objpos_value[0].pitch = get("sim/graphics/view/pilots_head_the") / 1.5
 			end
 
-			if object_name == "BeltLoader" and PLANE_ICAO == "B742" and SGES_Author == "Felis Leopard" and military_default == 1 then
+			if object_name == "BeltLoader" and PLANE_ICAO == "B742" and SGES_Author == "Felis Leopard" and sges_military_default == 1 then
 				objpos_target_value_y = ground - 2.6 -- (E4B modification)
 				objpos_value[0].y = objpos_target_value_y
 			end
@@ -8074,7 +7996,7 @@ function SGES_script()
 
 			--print("[Ground Equipment " .. version_text_SGES .. "]  Fuel has reached " .. fuel_currentX .. " going to " .. fuel_finalX)
 			coordinates_of_adjusted_ref_rampservice(sges_gs_plane_x[0], sges_gs_plane_z[0], fuel_currentX, fuel_currentY, sges_gs_plane_head[0] )
-			--~ if military == 1 then objpos_value[0].heading = objpos_value[0].heading  + 180 end
+			--~ if sges_military == 1 then objpos_value[0].heading = objpos_value[0].heading  + 180 end
 
 			objpos_value[0].x = g_shifted_x
 			objpos_value[0].z = g_shifted_z
@@ -8131,7 +8053,7 @@ function SGES_script()
 	function draw_Bus()
 		-- Object with datarefs dependencies now
 		local hdg_dev = 0
-		--if military_default == 1 then hdg_dev = -90 end
+		--if sges_military_default == 1 then hdg_dev = -90 end
 
 		-- define final positions :
 		if BeltLoaderFwdPosition >= 19 then
@@ -9612,7 +9534,7 @@ function SGES_script()
 						else Passenger1Object = Prefilled_Passenger1Object end
 
 						if Passenger_instance[0] == nil and passenger1_show_only_once and terminate_passenger_action == false then
-							if military == 1 or military_default == 1 then Passenger1Object = Prefilled_PassengerMilObject end
+							if sges_military == 1 or sges_military_default == 1 then Passenger1Object = Prefilled_PassengerMilObject end
 							--~ print("[Ground Equipment " .. version_text_SGES .. "] Randomly loading another Passenger1Object (with corrections to avoid 'too many callbacks' issue)")
 							XPLM.XPLMLoadObjectAsync(Passenger1Object,
 								function(inObject, inRefcon)
@@ -9639,7 +9561,7 @@ function SGES_script()
 						if randomView > 0.2 and randomView <= 0.8 then Passenger5Object = Prefilled_Passenger6Object
 						else Passenger5Object = Prefilled_Passenger4Object end
 						if Passenger_instance[4] == nil and passenger5_show_only_once then
-							if military == 1 or military_default == 1 then Passenger5Object = Prefilled_PassengerMilObject end
+							if sges_military == 1 or sges_military_default == 1 then Passenger5Object = Prefilled_PassengerMilObject end
 							--~ print("[Ground Equipment " .. version_text_SGES .. "] UNLOADING TO RANDOMLY POP UP ANOTHER CHARACTER: Passenger5Object swap")
 							XPLM.XPLMLoadObjectAsync(Passenger5Object,
 								function(inObject, inRefcon)
@@ -9987,7 +9909,7 @@ function SGES_script()
 							if randomView > 0.3 and randomView <= 0.6 then Passenger5Object = Prefilled_Passenger6Object
 							else Passenger5Object = Prefilled_Passenger4Object end
 							if Passenger_instance[4] == nil and passenger5_show_only_once then
-								if military == 1 or military_default == 1 then Passenger5Object = Prefilled_PassengerMilObject end
+								if sges_military == 1 or sges_military_default == 1 then Passenger5Object = Prefilled_PassengerMilObject end
 								--~ print("[Ground Equipment " .. version_text_SGES .. "] DEBOARDING : XPLM.XPLMLoadObjectAsync: Passenger5Object " .. Passenger5Object)
 								XPLM.XPLMLoadObjectAsync(Passenger5Object,
 									function(inObject, inRefcon)
@@ -10011,7 +9933,7 @@ function SGES_script()
 							if randomView < 0.4 then Passenger11Object = Prefilled_Passenger4Object
 							else Passenger11Object = Prefilled_Passenger13Object end
 							if Passenger_instance[10] == nil and passenger11_show_only_once then
-								if military == 1 or military_default == 1  then Passenger11Object = Prefilled_PassengerMilObject end
+								if sges_military == 1 or sges_military_default == 1  then Passenger11Object = Prefilled_PassengerMilObject end
 								XPLM.XPLMLoadObjectAsync(Passenger11Object,
 									function(inObject, inRefcon)
 										Passenger_instance[10] = XPLM.XPLMCreateInstance(inObject, datarefs_addr)
@@ -10034,7 +9956,7 @@ function SGES_script()
 							if randomView < 0.6 then Passenger12Object = Prefilled_Passenger14Object
 							else Passenger12Object = Prefilled_Passenger5Object end
 							if Passenger_instance[11] == nil and passenger12_show_only_once then
-								if military == 1 or military_default == 1  then Passenger12Object = Prefilled_PassengerMilObject end
+								if sges_military == 1 or sges_military_default == 1  then Passenger12Object = Prefilled_PassengerMilObject end
 								XPLM.XPLMLoadObjectAsync(Passenger12Object,
 									function(inObject, inRefcon)
 										Passenger_instance[11] = XPLM.XPLMCreateInstance(inObject, datarefs_addr)
@@ -12066,7 +11988,7 @@ function SGES_script()
 			imgui.PopStyleColor()
 			-- we sampled the time once to save performance and datref indexation, so this is not a permanent display of the local time
 			if imgui.IsItemHovered() then
-				if not show_Helicopters and IsXPlane12 and (military == 1 or military_default == 1) then
+				if not show_Helicopters and IsXPlane12 and (sges_military == 1 or sges_military_default == 1) then
 					show_Helicopters = true
 					Helicopters_chg = true
 				end
@@ -12085,7 +12007,7 @@ function SGES_script()
 			imgui.TextUnformatted(string.format("%02d",SGES_zulu_time_in_simulator_hours[0]) .. "h" .. string.format("%02d",SGES_local_time_in_simulator_mins[0]) .. " Z")
 			-- we sampled the time once to save performance and datref indexation, so this is not a permanent display of the local time
 			if imgui.IsItemHovered() then
-				if not show_Helicopters and IsXPlane12 and (military == 1 or military_default == 1)  then
+				if not show_Helicopters and IsXPlane12 and (sges_military == 1 or sges_military_default == 1)  then
 					show_Helicopters = true
 					Helicopters_chg = true
 				end
@@ -13194,7 +13116,7 @@ function SGES_script()
 			imgui.NextColumn()
 			imgui.TextUnformatted("(charging batt.)")
 		end
-	  elseif PLANE_ICAO == "412" or string.match(PLANE_ICAO,"CRJ") or PLANE_ICAO == "ALIA" or PLANE_ICAO == "B738" or IsToLiSs or PLANE_ICAO == "PC12" or PLANE_ICAO == "KODI" then
+	  elseif PLANE_ICAO == "412" or string.match(PLANE_ICAO,"CRJ") or PLANE_ICAO == "ALIA" or PLANE_ICAO == "B738" or IsToLiSs or PLANE_ICAO == "PC12" or PLANE_ICAO == "KODI"or (PLANE_ICAO == "UH60M" and string.find(SGES_Author,"melbo")) then
 		l_changed, l_newval = imgui.Checkbox(" GPU", show_GPU)
 	  elseif (string.match(PLANE_AUTHOR,"Thranda") and string.match(AIRCRAFT_PATH,"146")) then
 		l_changed, l_newval = imgui.Checkbox(" BAe-146 GPU", show_GPU)
@@ -13259,6 +13181,13 @@ function SGES_script()
 			set("Colimata/F104_A_SW_GROUND_gpu_i",0)
 		end
 
+		if show_GPU  and PLANE_ICAO == "UH60M" and string.find(SGES_Author,"melbo") then -- add Melbo's GPU
+			command_once("uh60m/ops/show_gpu")
+			set("uh60m/conf/cable",1)
+		elseif PLANE_ICAO == "UH60M" and string.find(SGES_Author,"melbo") then -- remove Melbo's GPU
+			command_once("uh60m/ops/hide_gpu")
+			set("uh60m/conf/cable",0)
+		end
 
 		if show_GPU and not show_ASU and IsToLiSs then -- add ToLiss GPU
 			show_ASU =  true -- also prepare the Low pressure and High pressure object depiction, but then their appearance is 3D animation driven.
@@ -13375,7 +13304,7 @@ function SGES_script()
 		imgui.Columns(1)
 
 	  if PLANE_ICAO ~= "ALIA" then -- ALIA doesn't require petroleum derivatives directly
-		if SGES_BushMode and IsXPlane12 and military == 0 and military_default == 0 then
+		if SGES_BushMode and IsXPlane12 and sges_military == 0 and sges_military_default == 0 then
 		  l_changed, l_newval = imgui.Checkbox(" Small fuel", show_FUEL)
 		elseif  Prefilled_FuelObject == XPlane12_ford_carrier_accessories_directory .. "SH60_Seahawk_animated.obj" then
 		  l_changed, l_newval = imgui.Checkbox(" Fuel (air delivery)", show_FUEL)
@@ -13415,13 +13344,20 @@ function SGES_script()
 			end
 		  end
 		end
+		--~ if show_FUEL  and PLANE_ICAO == "UH60M" and string.find(SGES_Author,"melbo") then -- add Melbo's fuel
+			--~ command_once("uh60m/ops/show_truck")
+			--~ set("uh60m/conf/hose",1)
+		--~ elseif PLANE_ICAO == "UH60M" and string.find(SGES_Author,"melbo") then -- remove Melbo's fuel
+			--~ command_once("uh60m/ops/hide_truck")
+			--~ set("uh60m/conf/hose",0)
+		--~ end
 		if sges_ahr == 1 and show_AAR then
-				imgui.SameLine()
-				l_changed, l_newval = imgui.Checkbox(" AAR", show_AAR)
-				if l_changed then
-					show_AAR = l_newval
-					AAR_chg = true
-				end
+			imgui.SameLine()
+			l_changed, l_newval = imgui.Checkbox(" AAR", show_AAR)
+			if l_changed then
+				show_AAR = l_newval
+				AAR_chg = true
+			end
 		end
 		if (not show_AAR and sges_big_airport and math.abs(BeltLoaderFwdPosition) > 4.5 and IsXPlane12) or show_Pump then
 
@@ -13500,7 +13436,7 @@ function SGES_script()
 		end
 	  end
 
-		if SGES_BushMode and IsXPlane12 and (military == 1 or military_default == 1) then
+		if SGES_BushMode and IsXPlane12 and (sges_military == 1 or sges_military_default == 1) then
 			l_changed, l_newval = imgui.Checkbox(" Car", show_Cleaning)
 		elseif SGES_BushMode and IsXPlane12 then
 			l_changed, l_newval = imgui.Checkbox(" Table & sunshade", show_Cleaning)
@@ -13517,7 +13453,7 @@ function SGES_script()
 
 
 	  if BeltLoaderFwdPosition > 2 then
-		  if PLANE_ICAO == "B742" and SGES_Author == "Felis Leopard" and military_default == 1 then
+		  if PLANE_ICAO == "B742" and SGES_Author == "Felis Leopard" and sges_military_default == 1 then
 				 l_changed, l_newval = imgui.Checkbox(" E-4 stairs", show_BeltLoader)
 		  elseif BeltLoaderFwdPosition >= ULDthresholdx and PLANE_ICAO ~= "MD88" then l_changed, l_newval = imgui.Checkbox(" Loader", show_BeltLoader)
 		  elseif PLANE_ICAO == "A321" and IsPassengerPlane == 0 then l_changed, l_newval = imgui.Checkbox(" LD Loader", show_BeltLoader)
@@ -13969,7 +13905,7 @@ function SGES_script()
 
 
 			if SGES_stairs_type ~= "Boarding_without_stairs" then
-				if SGES_BushMode and IsXPlane12 and (military == 1 or military_default == 1) then
+				if SGES_BushMode and IsXPlane12 and (sges_military == 1 or sges_military_default == 1) then
 					l_changed, l_newval = imgui.Checkbox(" Mobile crane", show_Stairs)
 				elseif SGES_BushMode and IsXPlane12 then
 					l_changed, l_newval = imgui.Checkbox(" Inspection ladder", show_Stairs)
@@ -14405,7 +14341,7 @@ function SGES_script()
 
 		if LATITUDE > 38.79 and LATITUDE < 38.90 and ((LONGITUDE > -77.037 and LONGITUDE < -77.035) or (LONGITUDE > -76.88 and LONGITUDE < -76.86) )  then
 			l_changed, l_newval = imgui.Checkbox(" Protection", show_Catering) -- At the White house
-		elseif SGES_BushMode and IsXPlane12 and military == 0 and military_default == 0 then
+		elseif SGES_BushMode and IsXPlane12 and sges_military == 0 and sges_military_default == 0 then
 			l_changed, l_newval = imgui.Checkbox(" Clutter", show_Catering)
 		else
 			l_changed, l_newval = imgui.Checkbox(" Catering", show_Catering)
@@ -14437,7 +14373,7 @@ function SGES_script()
 		Catering_chg = true
 	  end
 
-		if SGES_BushMode and IsXPlane12 and (military == 1 or military_default == 1) then
+		if SGES_BushMode and IsXPlane12 and (sges_military == 1 or sges_military_default == 1) then
 			l_changed, l_newval = imgui.Checkbox(" Weapons", show_Cones)
 		elseif SGES_BushMode and IsXPlane12 then
 			l_changed, l_newval = imgui.Checkbox(" Barils", show_Cones)
@@ -14482,7 +14418,7 @@ function SGES_script()
 			show_People4 = l_newval
 			People4_chg = true
 		end
-		if not SGES_BushMode and (military == 1 or military_default == 1) and BeltLoaderFwdPosition < 6 and show_Chocks then
+		if not SGES_BushMode and (sges_military == 1 or sges_military_default == 1) and BeltLoaderFwdPosition < 6 and show_Chocks then
 			if imgui.SmallButton("Rearm") then
 				command_once("sim/weapons/re_arm_aircraft")
 				set("sim/cockpit/weapons/guns_armed",1)
@@ -14890,7 +14826,7 @@ function SGES_script()
 
 
 	  --~ imgui.SameLine() -- added april 2021
-		if sges_gs_gnd_spd[0] < 30 and math.abs(BeltLoaderFwdPosition) < 6 and (military == 1 or military_default == 1)  then
+		if sges_gs_gnd_spd[0] < 30 and math.abs(BeltLoaderFwdPosition) < 6 and (sges_military == 1 or sges_military_default == 1)  then
 			l_changed, l_newval = imgui.Checkbox(" Handler", show_Ponev)
 			if imgui.IsItemActive() then
 				-- Click & hold tooltip
@@ -14971,7 +14907,7 @@ function SGES_script()
 				if Go_PB then pushback_manual = false
 				else pushback_manual = true force_factor_forced = -0.02 end
 			  end
-		   elseif sges_gs_gnd_spd[0] < 20 and BeltLoaderFwdPosition < 5 and (military == 1 or military_default == 1) then -- speed is 15 when on the XP12 carrier
+		   elseif sges_gs_gnd_spd[0] < 20 and BeltLoaderFwdPosition < 5 and (sges_military == 1 or sges_military_default == 1) then -- speed is 15 when on the XP12 carrier
 				imgui.SameLine()
 				  if imgui.Button("Push",35,17) then
 							if SGES_pushTurn_ratio == nil then SGES_pushTurn_ratio = 0 end -- TEMPO, dataref is loaded in the subscript for pushback
@@ -15573,16 +15509,16 @@ function SGES_script()
 		  if l_changed then
 			GUImilitary_sges = l_newval
 
-			if military == 1 then
-					military = 0
+			if sges_military == 1 then
+					sges_military = 0
 					milheight = 0
 		    else
-					military = 1
+					sges_military = 1
 					milheight = 1.1
-					military_default = 0 -- destroy default military
+					sges_military_default = 0 -- destroy default military
 					GUImilitary_default_sges = not l_newval
 			end
-			BushObjectsToggle(military)
+			BushObjectsToggle(sges_military)
 		  end
 	  else
 		  imgui.SameLine()
@@ -15618,22 +15554,22 @@ function SGES_script()
 		  if l_changed then
 			GUImilitary_default_sges = l_newval
 
-			if military_default == 1 then
-					military_default = 0
+			if sges_military_default == 1 then
+					sges_military_default = 0
 					milheight = 0
 			   else
-					military_default = 1
+					sges_military_default = 1
 					milheight = 0
-					military = 0 -- destroy x-trident
+					sges_military = 0 -- destroy x-trident
 					GUImilitary_sges = not l_newval
 				end
-				BushObjectsToggle(military_default)
+				BushObjectsToggle(sges_military_default)
 		  end
 	 -- end
 
 	 end -- IAS24
 
-	  if (military_default == 1 or military == 1 or sges_gs_ias_spd[0] >= 200 ) and not Mashaller_available then --IAS24
+	  if (sges_military_default == 1 or sges_military == 1 or sges_gs_ias_spd[0] >= 200 ) and not Mashaller_available then --IAS24
 		if imgui.TreeNode("Carrier and frigate, and more") then
 			if x_mtr_boats_table == nil then x_mtr_boats_table = dataref_table("sim/world/boat/x_mtr") end
 			if z_mtr_boats_table == nil then z_mtr_boats_table = dataref_table("sim/world/boat/z_mtr") end
@@ -16353,7 +16289,7 @@ function SGES_script()
 				imgui.TextUnformatted(string.sub(SamAirport,1,30))
 			end
 
-			--~ if prevent_respawn and (military == 1 or military_default == 1) and BeltLoaderFwdPosition < 6 then
+			--~ if prevent_respawn and (sges_military == 1 or sges_military_default == 1) and BeltLoaderFwdPosition < 6 then
 				--~ imgui.Separator()
 				--~ if imgui.TreeNode("More...") then
 						--~ if imgui.SmallButton("Arm guns") then
@@ -16482,7 +16418,7 @@ function SGES_script()
 					end
 					if l_changed then
 						SGES_BushMode = l_newval
-						if military == 1 or military_default == 1 then
+						if sges_military == 1 or sges_military_default == 1 then
 							BushObjectsToggle(1)
 						else
 							BushObjectsToggle(0)
@@ -16880,7 +16816,31 @@ function SGES_script()
 				end
 			end
 
-			if PLANE_ICAO == "B742" and string.find(AIRCRAFT_FILENAME,"Felis")  and sges_gs_gnd_spd[0] < 10 and not show_ArrestorSystem then
+
+			if PLANE_ICAO == "UH60M" and string.find(SGES_Author,"melbo") and not show_ArrestorSystem then
+				imgui.SameLine()
+				imgui.PushStyleColor(imgui.constant.Col.Button,  0xFF444444)
+				imgui.PushStyleColor(imgui.constant.Col.ButtonHovered,  0xFF555555)
+				if  imgui.Button("UH60M",50,20)  then -- Felis 742 command menu
+					command_once("uh60m/menu")
+				end
+				imgui.PopStyleColor(2)
+
+				if imgui.IsItemActive() then
+					-- Click & hold tooltip
+					imgui.BeginTooltip()
+					-- This function configures the wrapping inside the toolbox and thereby its width
+					imgui.PushTextWrapPos(imgui.GetFontSize() * 10)
+					imgui.PushStyleColor(imgui.constant.Col.Text,  0xFF01CCDD)
+					imgui.TextUnformatted("Open Melbo's menu.")
+					imgui.PopStyleColor()
+					-- Reset the wrapping, this must always be done if you used PushTextWrapPos
+					imgui.PopTextWrapPos()
+					imgui.EndTooltip()
+				end
+			end
+
+			if PLANE_ICAO == "B742" and string.find(AIRCRAFT_FILENAME,"Felis") and not show_ArrestorSystem then
 				imgui.SameLine()
 				imgui.PushStyleColor(imgui.constant.Col.Button,  0xFF444444)
 				imgui.PushStyleColor(imgui.constant.Col.ButtonHovered,  0xFF555555)
@@ -16902,7 +16862,8 @@ function SGES_script()
 					imgui.EndTooltip()
 				end
 
-
+			end
+			if PLANE_ICAO == "B742" and string.find(AIRCRAFT_FILENAME,"Felis") and SpeedyCopilotForFelis ~= nil and SpeedyCopilotForFelis and not show_ArrestorSystem then
 				--~ 0xAABBGGRR
 				--~ (A = alpha, puis bleu, vert, rouge)
 				--~ Ton 0xFF444444 correspond donc à :
@@ -16911,54 +16872,56 @@ function SGES_script()
 				--~ G = 44
 				--~ R = 44
 
-				if (SGES_parkbrake > 0.8 or show_Chocks) and sges_EngineState[0] < 5 and
-				sges_strobe_lights_on ~= nil and sges_strobe_lights_on[0] == 0 then
-					imgui.SameLine()
-					imgui.PushStyleColor(imgui.constant.Col.Button,  0xFF444470)
-					if  imgui.Button("B/ST",45,20)  then -- Felis 742
-						if step_proc_742 == nil or step_proc_742 == 99 then step_proc_742 = 1 end
-						B742ProcNumber = 0
-					end
-					imgui.PopStyleColor()
-					if imgui.IsItemActive() then
-						-- Click & hold tooltip
-						imgui.BeginTooltip()
-						-- This function configures the wrapping inside the toolbox and thereby its width
-						imgui.PushTextWrapPos(imgui.GetFontSize() * 10)
-						imgui.PushStyleColor(imgui.constant.Col.Text,  0xFF01CCDD)
-						imgui.TextUnformatted("B742 before start procedure (scripted).")
+				if sges_gs_gnd_spd[0] < 10 then
+					if (SGES_parkbrake > 0.8 or show_Chocks) and sges_EngineState[0] < 5 and
+					sges_strobe_lights_on ~= nil and sges_strobe_lights_on[0] == 0 then
+						imgui.SameLine()
+						imgui.PushStyleColor(imgui.constant.Col.Button,  0xFF444470)
+						if  imgui.Button("B/ST",45,20)  then -- Felis 742
+							if step_proc_742 == nil or step_proc_742 == 99 then step_proc_742 = 1 end
+							B742ProcNumber = 0
+						end
 						imgui.PopStyleColor()
-						-- Reset the wrapping, this must always be done if you used PushTextWrapPos
-						imgui.PopTextWrapPos()
-						imgui.EndTooltip()
-					end
-				elseif sges_EngineState[0] >= 5 then
-					imgui.SameLine()
-					imgui.PushStyleColor(imgui.constant.Col.Button,  0xFF447044)
-					if  imgui.Button("B/TO",45,20)  then -- Felis 742
-						if step_proc_742 == nil or step_proc_742 == 99 then step_proc_742 = 1 end
-						B742ProcNumber = 1
-					end
-					imgui.PopStyleColor()
-					if imgui.IsItemActive() then
-						-- Click & hold tooltip
-						imgui.BeginTooltip()
-						-- This function configures the wrapping inside the toolbox and thereby its width
-						imgui.PushTextWrapPos(imgui.GetFontSize() * 10)
-						imgui.PushStyleColor(imgui.constant.Col.Text,  0xFF01CCDD)
-						imgui.TextUnformatted("B742 before takeoff procedure (scripted).")
+						if imgui.IsItemActive() then
+							-- Click & hold tooltip
+							imgui.BeginTooltip()
+							-- This function configures the wrapping inside the toolbox and thereby its width
+							imgui.PushTextWrapPos(imgui.GetFontSize() * 10)
+							imgui.PushStyleColor(imgui.constant.Col.Text,  0xFF01CCDD)
+							imgui.TextUnformatted("B742 before start procedure (scripted).")
+							imgui.PopStyleColor()
+							-- Reset the wrapping, this must always be done if you used PushTextWrapPos
+							imgui.PopTextWrapPos()
+							imgui.EndTooltip()
+						end
+					elseif sges_EngineState[0] >= 5 then
+						imgui.SameLine()
+						imgui.PushStyleColor(imgui.constant.Col.Button,  0xFF447044)
+						if  imgui.Button("B/TO",45,20)  then -- Felis 742
+							if step_proc_742 == nil or step_proc_742 == 99 then step_proc_742 = 1 end
+							B742ProcNumber = 1
+						end
 						imgui.PopStyleColor()
-						-- Reset the wrapping, this must always be done if you used PushTextWrapPos
-						imgui.PopTextWrapPos()
-						imgui.EndTooltip()
+						if imgui.IsItemActive() then
+							-- Click & hold tooltip
+							imgui.BeginTooltip()
+							-- This function configures the wrapping inside the toolbox and thereby its width
+							imgui.PushTextWrapPos(imgui.GetFontSize() * 10)
+							imgui.PushStyleColor(imgui.constant.Col.Text,  0xFF01CCDD)
+							imgui.TextUnformatted("B742 before takeoff procedure (scripted).")
+							imgui.PopStyleColor()
+							-- Reset the wrapping, this must always be done if you used PushTextWrapPos
+							imgui.PopTextWrapPos()
+							imgui.EndTooltip()
+						end
 					end
 				end
 				-- also display the button to launch the after landing procedure form SGES window, but only with lights on and parkbrake off and engines running !
-				if SGES_parkbrake < 1 and sges_EngineState[0] >= 5 and not show_Chocks then
+				if SGES_parkbrake < 1 and sges_EngineState[0] >= 5 and sges_gs_plane_y_agl[0] < 1 and not show_Chocks then
 					imgui.SameLine()
 					imgui.PushStyleColor(imgui.constant.Col.Button,  0xFF704470)
 					if  imgui.Button("A/LDG",50,20)  then -- Felis 742
-						if step_proc_742 == nil or step_proc_742 == 99 then step_proc_742 = 1 end
+						step_proc_742 = 1
 						B742ProcNumber = 2
 						--~ do_often("B742_After_Landing_Procedure_sequence()")
 					end
@@ -16970,6 +16933,45 @@ function SGES_script()
 						imgui.PushTextWrapPos(imgui.GetFontSize() * 10)
 						imgui.PushStyleColor(imgui.constant.Col.Text,  0xFF01CCDD)
 						imgui.TextUnformatted("B742 after landing procedure (scripted).")
+						imgui.PopStyleColor()
+						-- Reset the wrapping, this must always be done if you used PushTextWrapPos
+						imgui.PopTextWrapPos()
+						imgui.EndTooltip()
+					end
+				elseif sges_EngineState[0] >= 5 and sges_gs_plane_y_agl[0] > 100 then
+					imgui.SameLine()
+					imgui.PushStyleColor(imgui.constant.Col.Button,  0xFF507050)
+					if  imgui.Button("CLIMB",50,20)  then -- Felis 742
+						step_proc_742 = 1
+						B742ProcNumber = 3
+					end
+					imgui.PopStyleColor()
+					if imgui.IsItemActive() then
+						-- Click & hold tooltip
+						imgui.BeginTooltip()
+						-- This function configures the wrapping inside the toolbox and thereby its width
+						imgui.PushTextWrapPos(imgui.GetFontSize() * 10)
+						imgui.PushStyleColor(imgui.constant.Col.Text,  0xFF704470)
+						imgui.TextUnformatted("B742 climb and acceleration procedure (scripted).")
+						imgui.PopStyleColor()
+						-- Reset the wrapping, this must always be done if you used PushTextWrapPos
+						imgui.PopTextWrapPos()
+						imgui.EndTooltip()
+					end
+					imgui.SameLine()
+					imgui.PushStyleColor(imgui.constant.Col.Button,  0xFF704470)
+					if  imgui.Button("APPR",50,20)  then -- Felis 742
+						step_proc_742 = 1
+						B742ProcNumber = 4
+					end
+					imgui.PopStyleColor()
+					if imgui.IsItemActive() then
+						-- Click & hold tooltip
+						imgui.BeginTooltip()
+						-- This function configures the wrapping inside the toolbox and thereby its width
+						imgui.PushTextWrapPos(imgui.GetFontSize() * 10)
+						imgui.PushStyleColor(imgui.constant.Col.Text,  0xFF01CCDD)
+						imgui.TextUnformatted("B742 descent and approach procedure (scripted).")
 						imgui.PopStyleColor()
 						-- Reset the wrapping, this must always be done if you used PushTextWrapPos
 						imgui.PopTextWrapPos()
@@ -18266,7 +18268,7 @@ function SGES_script()
 				imgui.TextUnformatted("Keep the mouse button down\nfor a description.")
 				imgui.Spacing()
 				imgui.PushStyleColor(imgui.constant.Col.Text,  0xFFFFCACA)
-				imgui.TextUnformatted("Options in color aren't saved\nfor the next X-Plane session.")
+				imgui.TextUnformatted("*Options in color aren't saved\nfor the next X-Plane session.")
 				imgui.PopStyleColor()
 				imgui.Spacing()
 				imgui.Separator()
@@ -18291,9 +18293,9 @@ function SGES_script()
 				if IsXPlane1220 then
 					imgui.PushStyleColor(imgui.constant.Col.Text,  0xFFFFCACA)
 					if UseXplane1220Chocks_specific ~= nil and UseXplane1220Chocks_specific then
-						l_changed, l_newval = imgui.Checkbox(" Prefer X-Plane 12 chocks\n (enforced with this model)", UseXplane1220Chocks)
+						l_changed, l_newval = imgui.Checkbox(" Prefer X-Plane 12 chocks\n (enforced with this model)*", UseXplane1220Chocks)
 					else
-						l_changed, l_newval = imgui.Checkbox(" Prefer X-Plane 12 chocks\n (a global setting only\n for this session)", UseXplane1220Chocks)
+						l_changed, l_newval = imgui.Checkbox(" Prefer X-Plane 12 chocks\n (a global setting only\n for this session)*", UseXplane1220Chocks)
 					end
 					if l_changed then
 						show_Chocks = false
@@ -18315,6 +18317,16 @@ function SGES_script()
 						imgui.Checkbox(" Load X-Plane 12 chocks\n at startup.", LoadXplane1220Chocks_specific)
 					end
 				elseif not IsXPlane1220 and UseXplane1220Chocks then UseXplane1220Chocks = false
+				end
+
+				if PLANE_ICAO == "B742" and string.find(AIRCRAFT_FILENAME,"Felis") then
+					imgui.PushStyleColor(imgui.constant.Col.Text,  0xFFFFCACA)
+					if SpeedyCopilotForFelis == nil then SpeedyCopilotForFelis = true end
+					l_changed, l_newval = imgui.Checkbox(" Activate the copilot and\n flight engineer (Felis 742)*", SpeedyCopilotForFelis)
+					if l_changed then
+						SpeedyCopilotForFelis = l_newval
+					end
+					imgui.PopStyleColor()
 				end
 
 				l_changed, l_newval = imgui.Checkbox(" Use automatic stairs at 1L", show_auto_stairs)
@@ -18378,7 +18390,7 @@ function SGES_script()
 
 				if math.abs(BeltLoaderFwdPosition) > 5 then
 					imgui.PushStyleColor(imgui.constant.Col.Text,  0xFFFFCACA)
-					l_changed, l_newval = imgui.Checkbox(" Use a pushback tug with bar\n Currently : " .. current_PB_mention, Prefilled_PushBackObject == 		PushBackBar)
+					l_changed, l_newval = imgui.Checkbox(" Use a pushback tug with bar*\n Currently : " .. current_PB_mention, Prefilled_PushBackObject == 		PushBackBar)
 					if  l_changed and math.abs(BeltLoaderFwdPosition) > 5 and PLANE_ICAO ~= "B772" then -- the STS FF B772 will always use a TBL tug  then
 						if Prefilled_PushBack1Object == Prefilled_LightObject and Prefilled_PushBackObject_civ ~= nil and Prefilled_PushBack1Object_civ ~= nil then
 							--~ Prefilled_PushBackObject = 	Prefilled_PushBackObject_civ
