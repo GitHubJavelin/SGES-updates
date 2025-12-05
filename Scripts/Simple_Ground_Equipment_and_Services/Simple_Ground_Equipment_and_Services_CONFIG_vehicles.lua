@@ -172,7 +172,7 @@ USSBlueback_Object = nil -- path to the SS-581 submarine by Alpeggio
 -- if you don't declare anything above, we try to test several locations for you automatically :
 local function check_external_assets(path)
 	local file = io.open(path, "r")
-	if file ~= nil then io.close(file) print("[Ground Equipment " .. version_text_SGES .. "] External asset found : " .. string.sub(path,-75,-1)) return path	else	return nil	end
+	if file ~= nil then io.close(file) print("[Ground Equipment " .. version_text_SGES .. "] Found asset : " .. string.sub(path,-55,-1)) return path	else	return nil	end
 end
 if MekoFrigate_Object == nil then MekoFrigate_Object = check_external_assets(SCRIPT_DIRECTORY   .. "Simple_Ground_Equipment_and_Services/ARA_AlteBrown/Resources/default scenery/sim objects/dynamic/Perry.obj" ) end
 -- ||||||||||||||||| juanik0 USS Tarawa LHA-1 present ? (automatic attempt) ||||||
