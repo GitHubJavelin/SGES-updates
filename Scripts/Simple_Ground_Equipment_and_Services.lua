@@ -4133,7 +4133,7 @@ function SGES_script()
 				if not string.match(AIRCRAFT_PATH,"146") and ((PLANE_ICAO and string.match(PLANE_ICAO, "P28") and PLANE_AUTHOR == "JustFlight")
 					or (PLANE_AUTHOR and string.match(PLANE_AUTHOR, "Thranda"))) then 					-- toggle JustFlight Piper
 
-					print("[Ground Equipment " .. version_text_SGES .. "] Applying Thranda animations along with SGES chocks.")
+					print("[Ground Equipment " .. version_text_SGES .. "] Removing Thranda animations along with SGES chocks.")
 					if XPLMFindDataRef("thranda/covers/TieDownR") ~= nil then	set("thranda/covers/TieDownR",0) end
 					if XPLMFindDataRef("thranda/covers/TieDownL") ~= nil then	set("thranda/covers/TieDownL",0) end
 					if XPLMFindDataRef("thranda/covers/TieDownT") ~= nil then	set("thranda/covers/TieDownT",0) end
@@ -4164,8 +4164,8 @@ function SGES_script()
 						if XPLMFindDataRef("thranda/covers/ExhaustCoverR") ~= nil then	set("thranda/covers/ExhaustCoverR",0) end
 						if XPLMFindDataRef("thranda/covers/ElevatorCoverR") ~= nil then	set("thranda/covers/ElevatorCoverR",0) end
 						if XPLMFindDataRef("thranda/covers/ElevatorCoverL") ~= nil then	set("thranda/covers/ElevatorCoverL",0) end
-						if XPLMFindDataRef("thranda/views/hidepilot") ~= nil then		set("thranda/views/hidepilot",0) end
-						if XPLMFindDataRef("thranda/views/hidecopilot") ~= nil then		set("thranda/views/hidecopilot",0) end
+						--~ if XPLMFindDataRef("thranda/views/hidepilot") ~= nil then		set("thranda/views/hidepilot",0) end
+						--~ if XPLMFindDataRef("thranda/views/hidecopilot") ~= nil then		set("thranda/views/hidecopilot",0) end
 						-- metal tail support :
 						if PLANE_ICAO == "KODI" and XPLMFindDataRef("sim/aircraft/parts/acf_gear_leglen") ~= nil then	set_array("sim/aircraft/parts/acf_gear_leglen",5,0) end
 						if PLANE_ICAO == "PC12" and XPLMFindDataRef("sim/aircraft/parts/acf_gear_leglen") ~= nil then	set_array("sim/aircraft/parts/acf_gear_leglen",3,0) end
@@ -4186,6 +4186,7 @@ function SGES_script()
 				sges_position_static_z 		= nil
 				sges_position_static_x 		= nil
 				sges_position_static_y 		= nil
+				Chocks_chg = false -- whatever happens :-)
 			end
 
 			-- here only applicable when not UseXplane1220Chocks, we draw the chocks :
