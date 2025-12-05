@@ -1,6 +1,12 @@
 
     == Caution ! The sole file skunkcrafts_updater.cfg should go into the root FlyWithLua folder ("X-Plane 12/Resources/plugins/FlyWithLua"), but all other SGES files go one folder below into "...FlyWithLua/Scripts/" as usual. ==
 
+
+Version 78.4, 5th of December, 2025
+	Bug fix : If you decide to get your trusty Thranda C208 out of the hangar at loading the "pilots" won't flashing on and off anymore.
+	Bug fix : correction of a critical bug introduced in 78.3 preventing objects to appear
+	Bug fix : prevent the marshaller stairs to move by themselves once the marshaller has already climbed on it.
+
 Version 78.3, 4th of December, 2025
 	The marshaller climbs on stairs for widebody airliners for a better visibility through the windshield.
 
