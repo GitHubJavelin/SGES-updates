@@ -3,7 +3,7 @@
 
 
 Version 78.4, 5th of December, 2025
-	Bug fix : If you decide to get your trusty Thranda C208 out of the hangar at loading the "pilots" won't flashing on and off anymore.
+	Bug fix : If you decide to get your trusty Thranda C208 out of the hangar at loading the "pilots" won't flash on and off anymore.
 	Bug fix : correction of a critical bug introduced in 78.3 preventing objects to appear
 	Bug fix : prevent the marshaller stairs to move by themselves once the marshaller has already climbed on it.
 
