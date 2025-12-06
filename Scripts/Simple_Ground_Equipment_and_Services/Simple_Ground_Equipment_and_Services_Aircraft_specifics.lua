@@ -513,6 +513,9 @@ if PLANE_ICAO == "B742" and string.find(AIRCRAFT_FILENAME,"Felis") then
 
 	--~ if B742ProcNumber == nil then	B742ProcNumber = -1 end
 	if LuaJITForFelis then
+		set("B742/anim/jit_off",0)
+		set("B742/anim/jit_off",0)
+		set("B742/anim/jit_off",1)
 		set("B742/anim/jit_off",1)
 	end
 	if SpeedyCopilotForFelis == nil then SpeedyCopilotForFelis = true end
@@ -1163,7 +1166,13 @@ if PLANE_ICAO == "B742" and string.find(AIRCRAFT_FILENAME,"Felis") then
 	local actions_Descent = {
 
 			function()
-				if (SGES_vvi_fpm_pilot[0] < -600 or sges_gs_plane_y_agl[0] < 2000) and sges_gs_ias_spd[0] < 255 then
+				if (SGES_vvi_fpm_pilot[0] < -800 or (SGES_vvi_fpm_pilot[0] < -400 and sges_gs_plane_y_agl[0] < 700)) and sges_gs_ias_spd[0] < 255 then
+					if XPLMFindDataRef("B742/SND/crew_accent_used") ~= nil then
+						crew_accent_used = get("B742/SND/crew_accent_used") -- actualize
+					else
+						crew_accent_used = "" -- the 742P doesn't have so far crew choice !
+					end
+					SGES_B742_sound = load_WAV_file(AircraftPath .. "../../" .. "Custom Sounds/crew/" .. crew_accent_used .. "/FE/letSee.wav")
 					--~ SGES_B742_sound = load_WAV_file(AircraftPath .. "../../" .. "Custom Sounds/crew/" .. crew_accent_used .. "/COP/checked.wav")
 					print("[Ground Equipment " .. version_text_SGES .. "] Below 250 knots IAS in descent in the Boeing 747-200")
 				else -- wait for the condition to realize, do not progress later
@@ -1173,12 +1182,6 @@ if PLANE_ICAO == "B742" and string.find(AIRCRAFT_FILENAME,"Felis") then
 			end,
 
 			function()
-				if XPLMFindDataRef("B742/SND/crew_accent_used") ~= nil then
-					crew_accent_used = get("B742/SND/crew_accent_used") -- actualize
-				else
-					crew_accent_used = "" -- the 742P doesn't have so far crew choice !
-				end
-				SGES_B742_sound = load_WAV_file(AircraftPath .. "../../" .. "Custom Sounds/crew/" .. crew_accent_used .. "/FE/letSee.wav")
 				print("[Ground Equipment " .. version_text_SGES .. "] Some sound files will not be loaded with the passenger variant of the B742.")
 				print("[Ground Equipment " .. version_text_SGES .. "] ==============================")
 				print("[Ground Equipment " .. version_text_SGES .. "]  Descent  and approach Procedure " .. crew_accent_used)
@@ -1208,18 +1211,6 @@ if PLANE_ICAO == "B742" and string.find(AIRCRAFT_FILENAME,"Felis") then
 			end,
 
 			function()
-				print("[Ground Equipment " .. version_text_SGES .. "] Reserve tank valves open")
-				set_array("B742/FUEL/fuel_crossfeed_valve_rot",4,1)
-				set_array("B742/FUEL/fuel_crossfeed_valve_rot",5,1)
-			end,
-
-			function()
-				print("[Ground Equipment " .. version_text_SGES .. "] Confirming that crossfeed valves 1 & 4 still open. All takeoff are made using main tanks to engine,fuel feed with 1 and 4 crossfeed valves open. Continue until fuel in tanks 1 and 4 is 21 000 LBS and then switch to center tank to all engines fuel feed if available, or main tanks 2 and 3 to all engines if the center tank is not available.")
-				set_array("B742/FUEL/fuel_crossfeed_valve_rot",0,1)
-				set_array("B742/FUEL/fuel_crossfeed_valve_rot",3,1)
-			end,
-
-			function()
 				SGES_B742_sound = load_WAV_file(AircraftPath .. "../../" .. "Custom Sounds/crew/" .. crew_accent_used .. "/FE/ignition.wav")
 				print("[Ground Equipment " .. version_text_SGES .. "] Ignition ON")
 				for _,eng in ipairs({0,1,2,3}) do
@@ -1245,7 +1236,7 @@ if PLANE_ICAO == "B742" and string.find(AIRCRAFT_FILENAME,"Felis") then
 			end,
 
 			function()
-				if (SGES_vvi_fpm_pilot[0] < 100 or sges_gs_plane_y_agl[0] < 4000) and sges_gs_ias_spd[0] <= 220 then
+				if SGES_vvi_fpm_pilot[0] < 0 and sges_gs_ias_spd[0] <= 220 then
 					SGES_B742_sound = load_WAV_file(AircraftPath .. "../../" .. "Custom Sounds/crew/" .. crew_accent_used .. "/COP/checked.wav")
 					print("[Ground Equipment " .. version_text_SGES .. "] Flaps deploy to 5")
 					set("sim/flightmodel/controls/flaprqst",0.33) -- FLAPS 5 DEGREES
@@ -1258,6 +1249,18 @@ if PLANE_ICAO == "B742" and string.find(AIRCRAFT_FILENAME,"Felis") then
 				else -- wait for the condition to realize, do not progress later
 					step_proc_742 = step_proc_742 - 1
 				end
+			end,
+
+			function()
+				print("[Ground Equipment " .. version_text_SGES .. "] Reserve tank valves open")
+				set_array("B742/FUEL/fuel_crossfeed_valve_rot",4,1)
+				set_array("B742/FUEL/fuel_crossfeed_valve_rot",5,1)
+			end,
+
+			function()
+				print("[Ground Equipment " .. version_text_SGES .. "] Confirming that crossfeed valves 1 & 4 still open. All takeoff are made using main tanks to engine,fuel feed with 1 and 4 crossfeed valves open. Continue until fuel in tanks 1 and 4 is 21 000 LBS and then switch to center tank to all engines fuel feed if available, or main tanks 2 and 3 to all engines if the center tank is not available.")
+				set_array("B742/FUEL/fuel_crossfeed_valve_rot",0,1)
+				set_array("B742/FUEL/fuel_crossfeed_valve_rot",3,1)
 			end,
 
 
@@ -1592,10 +1595,18 @@ if PLANE_ICAO == "B742" and string.find(AIRCRAFT_FILENAME,"Felis") then
 		end,
 
 		function()
+			SGES_B742_sound = load_WAV_file(AircraftPath .. "../../" .. "Custom Sounds/crew/" .. crew_accent_used .. "/FE/GalleyPower.wav")
+			set_array("B742/FE/galley_pwr_sw",2,0)
+		end,
+
+		function()
 			print("[Ground Equipment " .. version_text_SGES .. "] Waiting (1/3)")
 		end,
 
 		function()
+			SGES_B742_sound = nil
+			SGES_B742_sound = load_WAV_file(AircraftPath .. "../../" .. "Custom Sounds/crew/" .. crew_accent_used .. "/CPT/afterLandingChecklist.wav")
+			print("[Ground Equipment " .. version_text_SGES .. "] Ready for the after landing checklist following the procedure.")
 			print("[Ground Equipment " .. version_text_SGES .. "] Waiting (2/3)")
 			set("B742/cockpit_light/ovhd_noname",1)
 		end,
@@ -1606,7 +1617,7 @@ if PLANE_ICAO == "B742" and string.find(AIRCRAFT_FILENAME,"Felis") then
 		end,
 
 		function()
-			if math.abs(sges_gs_gnd_spd[0]) <= 7 then
+			if math.abs(sges_gs_gnd_spd[0]) <= 7 and math.abs(SGES_Throttle[2]) < 0.03 and math.abs(sges_nosewheel[0]) < 0.5 then
 				SGES_B742_sound = load_WAV_file(AircraftPath .. "../../" .. "Custom Sounds/crew/" .. crew_accent_used .. "/CPT/cutoff.wav")
 			else
 				step_proc_742 = step_proc_742 - 1
@@ -1618,7 +1629,7 @@ if PLANE_ICAO == "B742" and string.find(AIRCRAFT_FILENAME,"Felis") then
 		end,
 
 		function()
-			if sges_EngineState[2] < 40 and math.abs(sges_gs_gnd_spd[0]) <= 7 then
+			if sges_EngineState[2] < 40 and math.abs(SGES_Throttle[2]) < 0.03 and math.abs(sges_gs_gnd_spd[0]) <= 5 and math.abs(sges_nosewheel[0]) < 0.5 then
 				SGES_B742_sound = load_WAV_file(AircraftPath .. "../../" .. "Custom Sounds/crew/" .. crew_accent_used .. "/FE/shutdown.wav")
 				if XPLMFindDataRef("B742/OVHD/auto_brake_takeoff_sw") == nil then
 					SGES_B742_sound = load_WAV_file(AircraftPath .. "../../" .. "Custom Sounds/crew/" .. crew_accent_used .. "/FE/off.wav")
@@ -1638,14 +1649,6 @@ if PLANE_ICAO == "B742" and string.find(AIRCRAFT_FILENAME,"Felis") then
 		end,
 
 		function()
-			SGES_B742_sound = load_WAV_file(AircraftPath .. "../../" .. "Custom Sounds/crew/" .. crew_accent_used .. "/FE/GalleyPower.wav")
-			set_array("B742/FE/galley_pwr_sw",2,0)
-		end,
-
-		function()
-			SGES_B742_sound = nil
-			SGES_B742_sound = load_WAV_file(AircraftPath .. "../../" .. "Custom Sounds/crew/" .. crew_accent_used .. "/CPT/afterLandingChecklist.wav")
-			print("[Ground Equipment " .. version_text_SGES .. "] Ready for the after landing checklist following the procedure.")
 			set("B742/cockpit_light/dome_on_off",1)
 			collectgarbage()
 		end
